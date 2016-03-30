@@ -1,1 +1,1 @@
-# pinningTrustManager
+# Pinning TrustManager
