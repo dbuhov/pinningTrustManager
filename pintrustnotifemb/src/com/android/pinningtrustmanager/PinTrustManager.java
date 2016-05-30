@@ -11,6 +11,10 @@ import java.security.PublicKey;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -135,8 +139,25 @@ public class PinTrustManager implements X509TrustManager {
 
 		if (!isPinned) {
 			//If the certificate is not pinned, pin it
-			keys.put(encoded, certChain[0].getSubjectDN().toString());
-			Log.i(TAG, "PIN ADDED TO THE FILE! FOR "+certChain[0].getSubjectDN());
+			SimpleDateFormat df = new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy");
+			String today = df.format(Calendar.getInstance().getTime());
+			String exp = certChain[0].getNotAfter().toString();
+			
+			Date todaysDate = new Date();
+		    Date expirationDate = new Date();
+		    try {
+		        todaysDate = df.parse(today);
+		        expirationDate = df.parse(exp);
+		        if (expirationDate.after(todaysDate)) {
+		        	keys.put(encoded, certChain[0].getSubjectDN().toString());
+					Log.i(TAG, "PIN ADDED TO THE FILE! FOR "+certChain[0].getSubjectDN());
+		        } else {
+		        	throw new CertificateException("Pinning TrustManager: The connection has been terminated! Reason: Expired Certificate");
+		        }
+		    } catch (ParseException e) {
+		        // TODO Auto-generated catch block
+		        e.printStackTrace();
+		    }
 		}
 		
 		if (!isPinned) {
