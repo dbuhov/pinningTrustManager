@@ -1,5 +1,7 @@
 # Pinning TrustManager
 
+##Public Key Pinning
+
 ###Pinning TrustManager is a [Cydia Substrate](http://www.cydiasubstrate.com) extension that implements dynamic device-based certificate pinning.
 For further details, please refer to the [paper](http://dl.ifip.org/db/conf/networking/networking2016/1570236196.pdf) presented at IFIP Networking 2016 conference.
 
